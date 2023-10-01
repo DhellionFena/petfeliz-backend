@@ -8,7 +8,13 @@ const main = () => {
     const PORT = 8080;
 
     app.use(express.json());
-    app.use(cors());
+
+    const corsOptions = {
+        origin: '*',
+        credentials: true,
+      };
+
+    app.use(cors(corsOptions));
 
     app.use('/pets', petRouter);
     app.use('/users', userRouter);
