@@ -10,8 +10,9 @@ const main = () => {
     app.use(express.json());
 
     const corsOptions = {
-        origin: '*',
-      };
+    origin: 'https://bucolic-scone-0454f7.netlify.app',
+    credentials: true,
+    };
 
     app.use(cors(corsOptions));
 
