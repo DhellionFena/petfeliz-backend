@@ -14,7 +14,7 @@ class PetsController {
                 petsList.push(petItem);
             });
             
-            console.log(petsList);
+            //console.log(petsList);
             return res.json(petsList);
         } catch (error) {
             console.error('Erro ao buscar os pets:', error);
@@ -67,7 +67,7 @@ class PetCotroller {
             // pegando o ID do novo pet
             const novoPetId = novoPetRef.id;
             
-            return res.json({ id: novoPetId, ...req.body });
+            return res.status(201).json({ id: novoPetId, ...req.body });
         } catch (error) {
             
             console.error('Erro ao criar o pet:', error);

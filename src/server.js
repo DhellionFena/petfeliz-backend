@@ -12,7 +12,8 @@ const main = () => {
     app.use('/users', userRouter);
     
     app.listen(PORT, () => {
-        console.log("Servidor rodando em http://localhost:8080");
+        //console.log("Servidor rodando em http://localhost:8080");
+        console.log("Servidor rodando!");
     })
 }
 

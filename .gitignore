@@ -130,3 +130,6 @@ dist
 .pnp.*
 
 serviceAccountKey.json
+
+src/test
+src/test/api.json

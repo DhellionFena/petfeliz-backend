@@ -45,7 +45,7 @@ class UserCotroller {
                 usersList.push(userItem);
             });
             
-            console.log(usersList);
+            //console.log(usersList);
             return res.json(usersList);
         } catch (error) {
             console.error('Erro ao buscar os users:', error);
