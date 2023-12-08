@@ -1,4 +1,5 @@
-const db = require("../firebase");
+const {db} = require("../firebase");
+const bcrypt = require('bcrypt');
 
 class UserCotroller {
 
@@ -6,12 +7,15 @@ class UserCotroller {
         try {
             const userId = req.params.id; // Captura o ID do user da requisição
             const userDoc = await db.collection('usuarios').doc(userId).get();
-
+            
             if (!userDoc.exists) {
                 return res.status(404).json({ error: 'User não encontrado' });
             }
 
+            
             const userData = userDoc.data();
+            const enderecoUser = await db.collection('enderecos').doc(userData.id_endereco).get(); 
+
             return res.json({
                 id: userId, 
                 cpf: userData.cpf,
@@ -19,7 +23,10 @@ class UserCotroller {
                 email: userData.email,
                 nome: userData.nome,
                 telefone: userData.telefone,
-                id_endereco: userData.id_endereco
+                endereco: {
+                    id_endereco: userData.id_endereco,
+                    ...enderecoUser.data()
+                }
             });
         } catch (error) {
             console.error('Erro ao buscar o user:', error);
@@ -53,34 +60,92 @@ class UserCotroller {
         }
     }
 
+    async getAllUserPets(req, res) {
+        try {
+            const userId = req.params.id; // Captura o ID do user da requisição
+            const pets = await db.collection('pets').get();
+            const petsList = [];
+            pets.forEach((doc) => {
+                const petData = doc.data();
+                if(petData.id_dono == userId) {
+                    const petItem = {
+                        id: doc.id,
+                        ...petData
+                    };
+                    petsList.push(petItem);
+                }
+            });
+
+            return res.json({
+                user_id: userId,
+                user_pets: petsList
+            });
+        } catch (error) {
+            console.error('Erro ao buscar o user:', error);
+            return res.status(500).json({ error: 'Erro ao buscar o user' });
+        }
+    }
+
     async createUser(req, res) {
+
         const { 
             cpf,
             data_nasc,    
             email,
             nome,
-            senha,
+            senha, // rever
             telefone,
-            //endereco
+
+            cidade,
+            estado,
+            bairro,
+            numero,
+            rua
         } = req.body;
 
-        //id_endereco
+        try {
+            const users = await db.collection('usuarios').get();
+            var email_ja_existe = false;
+            users.forEach((doc) => {
+                const userData = doc.data();
+                if(userData.email == email) {
+                    email_ja_existe = true;
+                }
+            });
+
+            if (email_ja_existe) {
+                return res.status(409).json({ error: 'Email já existe' });
+            }
+
+        } catch (error) {
+            return res.status(500).json({ error: 'Erro ao verificar emails' });
+        }
 
         try {
-             const novouserRef = await db.collection('usuarios').add({
+            const novoenderecoRef = await db.collection('enderecos').add({
+                cidade,
+                estado,
+                bairro,
+                numero,
+                rua
+            });
+
+            const saltRounds = 10;
+            const hash = bcrypt.hashSync(senha, saltRounds);
+
+            const novouserRef = await db.collection('usuarios').add({
                 cpf,
                 data_nasc,    
                 email,
                 nome,
-                senha,
+                senha: hash.toString(),
                 telefone,
-                //id_endereco
+                id_endereco: novoenderecoRef.id
             });
-            
-            // pegando o ID do novo user
-            const novouserId = novouserRef.id;
-            
-            return res.json({ id: novouserId, ...req.body });
+       // pegando o ID do novo user
+       const novouserId = novouserRef.id;
+       
+       return res.json({ id: novouserId});
         } catch (error) {
             
             console.error('Erro ao criar o user:', error);

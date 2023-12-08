@@ -1,4 +1,4 @@
-const db = require("../firebase");
+const {db} = require("../firebase");
 
 class PetsController {
     async getAllPets(req, res) {

@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { userController } = require("../controller/user.controller");
+const { authController } = require("../controller/auth.controller");
 
 const userRouter = Router();
 
@@ -10,10 +11,13 @@ const userRouter = Router();
 // DELETE https://api-petfeliz-backend-com.onrender.com/users/:id  => deleta 1 user
 
 userRouter.get("/", userController.getAllUsers);
+userRouter.get("/:id/pets", userController.getAllUserPets);
 userRouter.post("/", userController.createUser);
 userRouter.get("/:id", userController.getUser);
 userRouter.put("/:id", userController.updateUser);
 userRouter.delete("/:id", userController.deleteUser);
+
+userRouter.post("/login", authController.login);
 
 module.exports = {
     userRouter
