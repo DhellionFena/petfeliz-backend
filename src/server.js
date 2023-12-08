@@ -7,16 +7,26 @@ require('dotenv').config();
 const main = () => {
     const app = express();
     const PORT = process.env.PORT;
-    console.log(PORT);
 
     app.use(express.json());
 
     const corsOptions = {
-        origin: '*',
-        credentials: true,
-      };
+    origin: 'https://bucolic-scone-0454f7.netlify.app',
+    credentials: true,
+    };
 
     app.use(cors(corsOptions));
+
+    app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', true);
+    next();
+    });
+
+    app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+    });
 
     app.use('/pets', petRouter);
     app.use('/users', userRouter);
