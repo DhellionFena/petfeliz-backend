@@ -25,10 +25,15 @@ class PetsController {
         try {
             const pets = await db.collection('pets').get();
             const users = await db.collection('usuarios').get();
+            const usersList = [];
+            users.forEach((doc) => {
+                const userData = doc.data();
+                usersList.push({id: doc.id, ...userData});
+            });
             const petsList = [];
             pets.forEach((doc) => {
                 const petData = doc.data();
-                const dono = users.filter(user => user.id == petData.id_dono);
+                const dono = usersList.filter(user => user.id == petData.id_dono);
                 const petItem = {
                     id: doc.id,
                     ...petData,
