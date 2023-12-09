@@ -10,6 +10,7 @@ const petRouter = Router();
 // DELETE https://api-petfeliz-backend-com.onrender.com/pets/:id  => deleta 1 pet
 
 petRouter.get("/", petsController.getAllPets);
+petRouter.get("/all", petsController.getAllPetsWithUsers);
 petRouter.post("/", petController.createPet);
 petRouter.get("/:id", petController.getPet);
 petRouter.put("/:id", petController.updatePet);

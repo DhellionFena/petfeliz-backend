@@ -21,6 +21,29 @@ class PetsController {
             return res.status(500).json({ error: 'Erro ao buscar os pets' });
         }
     }
+    async getAllPetsWithUsers(req, res) {
+        try {
+            const pets = await db.collection('pets').get();
+            const users = await db.collection('usuarios').get();
+            const petsList = [];
+            pets.forEach((doc) => {
+                const petData = doc.data();
+                const dono = users.filter(user => user.id == petData.id_dono);
+                const petItem = {
+                    id: doc.id,
+                    ...petData,
+                    dados_dono: dono[0],
+                };
+                petsList.push(petItem);
+            });
+            
+            //console.log(petsList);
+            return res.json(petsList);
+        } catch (error) {
+            console.error('Erro ao buscar os pets:', error);
+            return res.status(500).json({ error: 'Erro ao buscar os pets' });
+        }
+    }
 }
 
 class PetCotroller {

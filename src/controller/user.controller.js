@@ -76,10 +76,7 @@ class UserCotroller {
                 }
             });
 
-            return res.json({
-                user_id: userId,
-                user_pets: petsList
-            });
+            return res.json(petsList);
         } catch (error) {
             console.error('Erro ao buscar o user:', error);
             return res.status(500).json({ error: 'Erro ao buscar o user' });
