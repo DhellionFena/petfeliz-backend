@@ -28,7 +28,11 @@ class PetsController {
             const usersList = [];
             users.forEach((doc) => {
                 const userData = doc.data();
-                usersList.push({id: doc.id, ...userData});
+                usersList.push({
+                    id: doc.id, 
+                    nome: userData.nome,
+                    telefone: userData.telefone
+                });
             });
             const petsList = [];
             pets.forEach((doc) => {
