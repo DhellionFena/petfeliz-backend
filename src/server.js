@@ -6,12 +6,12 @@ require('dotenv').config();
 
 const main = () => {
     const app = express();
-    const PORT = process.env.PORT;
+    const PORT = 3001;
 
     app.use(express.json());
 
     const corsOptions = {
-    origin: 'https://bucolic-scone-0454f7.netlify.app',
+    origin: 'http://localhost:3000',
     credentials: true,
     };
 
